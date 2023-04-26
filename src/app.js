@@ -1,8 +1,7 @@
 //? Dependencies
 const express = require('express')
 const cors = require('cors')
-
-require('dotenv').config();
+require('dotenv').config()
 
 
 //? Files
@@ -50,5 +49,5 @@ app.use('/api/v1/conversations', conversationRouter)
 const PORT = process.env.PORT || 3000   
 
 app.listen(PORT, () => {
-    console.log(`Server started on ${PORT}`)
+    console.log(`Server started at port ${PORT}`)
 })
