@@ -5,8 +5,7 @@ const Participants = require("./participants.models")
 
    const initModels = () => {
    
-      Users.hasMany(RecoveryPasswords)
-      RecoveryPasswords.belongsTo(Users)
+   
   
       Users.hasMany(Messages)
       Messages.belongsTo(Users)
