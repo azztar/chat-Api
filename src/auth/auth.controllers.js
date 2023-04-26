@@ -1,36 +1,23 @@
-const uuid = require('uuid')
+
 const { findUserByEmail } = require('../users/users.controllers')
 const { comparePassword } = require('../utils/crypto')
+//? son funciones asincronas
+//? retornan informacion
 
-const RecoveryPassword = require('../models/recoveryPasswords.models')
-
-const checkUsersCredentials = async (email, password) => {
+const checkUserCredentials = async(email, password) => {
     try {
         const user = await findUserByEmail(email)
         const verifyPassword = comparePassword(password, user.password)
         if(verifyPassword){
             return user
-        } 
-        return null
+        } else {
+            return false
+        }
     } catch (error) {
-        return null
+        return false
     }
 }
 
-const createRecoveryToken = async (email) => {
-    try {
-        const user = await findUserByEmail(email)
-        const data = await RecoveryPassword.create({
-            id: uuid.v4(),
-            userId : user.id
-        })
-        return data
-    } catch (error) {
-        return error
-    } 
-} 
 
-module.exports = {
-    checkUsersCredentials,
-    createRecoveryToken
-}
+
+module.exports = checkUserCredentials

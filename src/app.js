@@ -2,6 +2,9 @@
 const express = require('express')
 const cors = require('cors')
 
+require('dotenv').config();
+
+
 //? Files
 const config = require('../config')
 const db = require('./utils/database')
