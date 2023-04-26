@@ -1,5 +1,5 @@
 const userControllers = require('./users.controllers')
-const mailer = require('../utils/mailer')
+
 //? Get, Post
 
 const getAllUsers = (req, res) => {
