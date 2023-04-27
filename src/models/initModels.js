@@ -5,8 +5,6 @@ const Participants = require("./participants.models")
 
    const initModels = () => {
    
-   
-  
       Users.hasMany(Messages)
       Messages.belongsTo(Users)
   
