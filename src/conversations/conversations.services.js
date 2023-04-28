@@ -1,82 +1,68 @@
-const conversationController = require('./conversations.controllers')
+const conversationControllers = require('./conversations.controllers')
+const responses = require('../utils/handleResponses')
 
-const getAllConversations = (req, res) => {
-    conversationController.findAllConversations()
-        .then((data) => {
-            res.status(200).json(data)
+const getAllConversationsByUser = (req, res) => {
+    const userId = req.user.id
+
+    conversationControllers.findAllConversationsByUser(userId)
+        .then(data => {
+            responses.success({
+                res,
+                status:200,
+                message: data.length ? 'Showing all your conversations': 'No conversations to show',
+                data
+            })
         })
-        .catch((err) => {
-            res.status(400).json({message: err.message})
+        .catch(err => {
+            responses.error({
+                res, 
+                status: 400,
+                message: 'Something bad',
+                data: err
+            })
         })
 }
 
-const getConversationById = (req, res) => {
+const postNewConversation = (req, res) => {
 
-    const id = req.params.conversation_id
-    conversationController.findConversationById(id)
+    const ownerId = req.user.id
+    const {guestId, ...conversationObj} = req.body 
+
+    conversationControllers.createConversation(conversationObj, ownerId, guestId)
         .then(data => {
-            if(data){
-                res.status(200).json(data)
+            if(data) {
+                responses.success({
+                    res,
+                    status: 201,
+                    message: 'Conversation created successfully!',
+                    data
+                })
             } else {
-                res.status(404).json({message: 'Invalid ID'})
+                responses.error({
+                    res,
+                    status: 400,
+                    message: `User with id: ${guestId} not found`,
+                })
             }
         })
         .catch(err => {
-            res.status(400).json({message: err.message})
+            responses.error({
+                res,
+                status: 400,
+                message: err.message || 'Something bad',
+                data: err,
+                fields: {
+                    name: 'String',
+                    profileImage: 'String',
+                    isGroup: 'boolean',
+                    guestId: 'String UUID'
+                }
+            })
         })
 }
 
-const postConversation = (req ,res) => {
-    const {title, imageUrl, participantId} = req.body
-    const ownerId = req.user.id 
-    conversationController.createConversation({title, imageUrl, participantId, ownerId})
-        .then(data => {
-            res.status(201).json(data)
-        })
-        .catch(err => {
-            res.status(400).json({message: err.message, fields: {
-                title: 'string',
-                imageUrl: 'string',
-                participantId: 'UUID'
-            }})
-        })
-}
-
-const patchConversation = (req, res) => {
-    const id = req.params.conversation_id
-    const { title, imageUrl } = req.body
-    conversationController.updateConversation(id, {title, imageUrl})
-        .then(data => {
-            if(data){
-                res.status(200).json({message: `Conversation with id: ${id} updated succesfully!`})
-            } else {
-                res.status(404).json({message: 'Invalid ID'})
-            }
-        })
-        .catch(err => {
-            res.status(400).json({message: err.message})
-        })
-}
-
-const deleteConvesation = (req, res) => {
-    const id = req.params.conversation_id
-    conversationController.removeConversation(id)
-        .then(data => {
-            if(data){
-                res.status(204).json()
-            } else {
-                res.status(404).json({message: 'Invalid ID'})
-            }
-        })
-        .catch(err => {
-            res.status(400).json({message: err.message})
-        }) 
-}
 
 module.exports = {
-    getAllConversations,
-    postConversation,
-    getConversationById,
-    patchConversation,
-    deleteConvesation
+    getAllConversationsByUser,
+    postNewConversation
 }
