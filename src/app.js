@@ -8,7 +8,7 @@ const db = require('./utils/database')
 const initModels = require('./models/initModels')
 const userRouter = require('./users/users.router')
 const authRouter = require('./auth/auth.router')
-const conversationRouter = require('./conversations/conversations.router')
+const conversationRouter = require('./conversations/conversations.router.')
 
 //? Initial Configs
 
