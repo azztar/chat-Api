@@ -1,27 +1,7 @@
 const conversationControllers = require('./conversations.controllers')
 const responses = require('../utils/handleResponses')
 
-const getAllConversationsByUser = (req, res) => {
-    const userId = req.user.id
 
-    conversationControllers.findAllConversationsByUser(userId)
-        .then(data => {
-            responses.success({
-                res,
-                status:200,
-                message: data.length ? 'Showing all your conversations': 'No conversations to show',
-                data
-            })
-        })
-        .catch(err => {
-            responses.error({
-                res, 
-                status: 400,
-                message: 'Something bad',
-                data: err
-            })
-        })
-}
 
 const postNewConversation = (req, res) => {
 
@@ -63,6 +43,5 @@ const postNewConversation = (req, res) => {
 
 
 module.exports = {
-    getAllConversationsByUser,
     postNewConversation
 }
