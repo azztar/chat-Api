@@ -3,24 +3,21 @@ const Conversations = require("./conversations.models")
 const Messages = require("./messages.models")
 const Participants = require("./participants.models")
 
-   const initModels = () => {
-   
-      Users.hasMany(Messages)
-      Messages.belongsTo(Users)
-  
-      Users.hasMany(Conversations)
-      Conversations.belongsTo(Users)
-  
- 
-      Users.hasMany(Participants)
-      Participants.belongsTo(Users)
-  
-      Conversations.hasMany(Messages)
-      Messages.belongsTo(Conversations)
+const initModels = () => {
 
-      Conversations.hasMany(Participants)
-      Participants.belongsTo(Conversations)
-  
-  }
+
+   //? Users -> Participants
+   Users.hasMany(Participants)
+   Participants.belongsTo(Users)
+
+   //? Conversations -> Participants
+   Conversations.hasMany(Participants)
+   Participants.belongsTo(Conversations)
+
+   //? Participants -> Messages
+   Participants.hasMany(Messages)
+   Messages.belongsTo(Participants)
+
+}
 
 module.exports = initModels

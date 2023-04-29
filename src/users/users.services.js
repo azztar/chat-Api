@@ -1,5 +1,4 @@
 const userControllers = require('./users.controllers')
-
 //? Get, Post
 
 const getAllUsers = (req, res) => {
