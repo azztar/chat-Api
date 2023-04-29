@@ -1,45 +1,21 @@
 const conversationControllers = require('./conversations.controllers')
-const responses = require('../utils/handleResponses')
-
-
 
 const postNewConversation = (req, res) => {
-
-    const ownerId = req.user.id
-    const {guestId, ...conversationObj} = req.body 
-
-    conversationControllers.createConversation(conversationObj, ownerId, guestId)
+    const conversationObj = req.body
+    const ownerId = req.user.id 
+    conversationControllers.createConversation({...conversationObj, ownerId})
         .then(data => {
-            if(data) {
-                responses.success({
-                    res,
-                    status: 201,
-                    message: 'Conversation created successfully!',
-                    data
-                })
-            } else {
-                responses.error({
-                    res,
-                    status: 400,
-                    message: `User with id: ${guestId} not found`,
-                })
+            if(!data) {
+                return res.status(404).json({message: 'Guest ID not exists'})
             }
+            res.status(201).json(data)
         })
         .catch(err => {
-            responses.error({
-                res,
-                status: 400,
-                message: err.message || 'Something bad',
-                data: err,
-                fields: {
-                    name: 'String',
-                    profileImage: 'String',
-                    isGroup: 'boolean',
-                    guestId: 'String UUID'
-                }
-            })
+            res.status(400).json({err: err.message})
         })
 }
 
 
-module.exports = postNewConversation
+module.exports = {
+    postNewConversation
+}
