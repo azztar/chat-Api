@@ -1,70 +1,45 @@
-const Conversations = require('../models/conversations.models')
-const Participants = require('../models/participants.models')
-const Users = require('../models/users.models')
 const uuid = require('uuid')
 
+const Conversations = require('../models/conversations.models')
+const Users = require('../models/users.models')
+const Participants = require('../models/participants.models')
 
-const findAllConversationsByUser = async (userId) => {
-    const data = await Conversations.findAll({
-        include: {
-            model: Participants,
-            where: {
-                userId: userId
-            }
+const createConversation = async (conversationObj) => {
+    const userGuest = await Users.findOne({
+        where: {
+            id: conversationObj.guestId
         }
     })
-    return data.map(({
-        id, 
-        name, 
-        profileImage, 
-        isGroup, 
-        createdAt
-    }) => ({
-        id, 
-        name, 
-        profileImage, 
-        isGroup, 
-        createdAt
-    }))
-}
 
-const createConversation = async (conversationObj, userOwnerId, userGuestId) => {
+    if(!userGuest) return false
 
-    
-    const userGuest = await Users.findOne({where: {id: userGuestId}})
-
-    if(!userGuest){
-        return false
-    } 
-
-    const newConversation = await Conversations.create({
+    const newConversations = await Conversations.create({
         id: uuid.v4(),
         name: conversationObj.name,
         profileImage: conversationObj.profileImage,
         isGroup: conversationObj.isGroup
     })
 
-    
     await Participants.create({
         id: uuid.v4(),
-        userId: userOwnerId,
-        conversationId: newConversation.id,
+        userId: conversationObj.ownerId,
+        conversationId: newConversations.id,
         isAdmin: true
     })
 
- 
     await Participants.create({
         id: uuid.v4(),
-        userId: userGuestId,
-        conversationId: newConversation.id,
+        userId: conversationObj.guestId,
+        conversationId: newConversations.id,
         isAdmin: false
     })
-
-    return newConversation
+    return newConversations
 }
 
-
-module.exports = {
-    createConversation,
-    findAllConversationsByUser
-}
+createConversation({
+    name: "Conversacion entre Sahid y Edgar",
+    ownerId: "744ab422-2402-4100-95a5-0fc4b96a6c0b",
+    guestId: "6d6c9bf0-970d-45ff-a2ba-7d060adfeab0"
+})
+    .then(console.log)
+    .catch(console.log)
