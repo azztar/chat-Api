@@ -42,6 +42,4 @@ createConversation({
     guestId: "6d6c9bf0-970d-45ff-a2ba-7d060adfeab0"
 })
 
-module.exports = {
-    createConversation
-}
+module.exports = createConversation

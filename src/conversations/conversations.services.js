@@ -42,6 +42,4 @@ const postNewConversation = (req, res) => {
 }
 
 
-module.exports = {
-    postNewConversation
-}
+module.exports = postNewConversation
