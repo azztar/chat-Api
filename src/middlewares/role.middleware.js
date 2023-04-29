@@ -1,5 +1,3 @@
-//? Previamente tiene que pasar por el middleware de autenticación
-
 const roleMiddleware = (req, res, next) => {
     if(req.user.role === 'admin'){
         next()
@@ -10,4 +8,3 @@ const roleMiddleware = (req, res, next) => {
 
 
 module.exports = roleMiddleware
-
